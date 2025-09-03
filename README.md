@@ -23,9 +23,9 @@ The experimental study was run by using Python 3.8.8 and visualized by using R v
 ### To repeat the experiment from beginning
 1. Download the data sets. *TO DO: Add the links.*
 2. Run the prediction files to calculate the predictions for all the data sets and all settings with all the methods used in the experiment.
-- Run `python CGKronRLS_predictions.py` to obtain the predictions with the four versions of CGKronRLS: linear or Gaussian domain kernels together with linear or Kronecker kernel pairwise kernel.
-- Run `python sklearn_predictions.py` to obtain the predictions with the sklearn methods or method that used a wrapper of the same style: random forest, kNN, XGBoost and polynomial regression.
-- Run the deep learning methods according to the instructions in the separate folders. 
+    * Run `python CGKronRLS_predictions.py` to obtain the predictions with the four versions of CGKronRLS: linear or Gaussian domain kernels together with linear or Kronecker kernel pairwise kernel.
+    * Run `python sklearn_predictions.py` to obtain the predictions with the sklearn methods or method that used a wrapper of the same style: random forest, kNN, XGBoost and polynomial regression.
+    * Run the deep learning methods according to the instructions in the separate folders. 
 ### To verify the obtained results starting from already having the predictions
 1. Download the predictions from https://seafile.utu.fi/d/894492d8fe1c44dd9dec/.
 2. Run `python performance.py` to obtain the performance measure values for the real-world data sets.
