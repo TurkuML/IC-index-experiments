@@ -1,4 +1,4 @@
-This repository contains the files that were used to run the experiments in the paper. The functions related to the real-world data sets and creating the splits for the different off-training-set prediction problems are included in the file data.py. There are separate files and folders for the simulation, CGKronRLS and sklearn-style of learning algorithms and deep learning methods. The method provided by Sandor Szedmak is in file ltr_solver_multiview_013.py and its wrapper to the sklearn style in file ltr_wrapper.py. The performance measures on the real-world data sets were calculated by the file performance.py. The function cindex in library RLScore was modified to be suitable for calculating the normalized groupwise C-indices, and is thus given in file cindex_measure.py.
+This repository contains the files that were used to run the experiments in the paper *TO DO: Add the information of the paper.* The functions related to the real-world data sets and creating the splits for the different off-training-set prediction problems are included in the file data.py. There are separate files and folders for the simulation, CGKronRLS and sklearn-style of learning algorithms and deep learning methods. The method provided by Sandor Szedmak is in file ltr_solver_multiview_013.py and its wrapper to the sklearn style in file ltr_wrapper.py. The performance measures on the real-world data sets were calculated by the file performance.py. The function cindex in library RLScore was modified to be suitable for calculating the normalized groupwise C-indices, and is thus given in file cindex_measure.py.
 
 # To repeat the experiment
 1. Make sure all the necessary files are in the same folder.
@@ -33,3 +33,27 @@ The experimental study was run by using Python 3.8.8 and visualized by using R v
 ## Simulation study
 1. Run `python simulation.py` to repeat the whole simulation study.
 2. Use the file `figures_simulation.R` to summarise and visualize the results.
+
+# Terminology mapping
+In case there are still some previously used terminology in the code files, here is presented a mapping between them and the latest terminology used in the paper. 
+<table align = "center">
+    <tr>
+        <th> Terms possibly still in the files </th>
+        <th> Correspondence in the paper </th>
+    </tr>
+    <tr>
+        <td> S1 </td>
+        <td> IDIT </td>
+    </tr>
+    <tr>
+        <td> S2 </td>
+        <td> IDOT </td>
+    </tr>
+    <tr>
+        <td> S3 </td>
+        <td> ODIT </td>
+    </tr>
+    <tr>
+        <td> S4 </td>
+        <td> ODOT </td>
+    </tr>
