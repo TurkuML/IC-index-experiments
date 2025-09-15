@@ -27,7 +27,7 @@ The experimental study was run by using Python 3.8.8 and visualized by using R v
     * Run `python sklearn_predictions.py` to obtain the predictions with the sklearn methods or method that used a wrapper of the same style: random forest, kNN, XGBoost and polynomial regression.
     * Run the deep learning methods according to the instructions in the separate folders. 
 ### To verify the obtained results starting from already having the predictions
-1. Download the predictions from https://seafile.utu.fi/d/894492d8fe1c44dd9dec/.
+1. Download the predictions from https://staff.cs.utu.fi/~aatapa/data/IC-index_predictions/IC-index%20-%20experiment%20predictions.zip and extract them in the same folder as where the codes are.
 2. Run `python performance.py` to obtain the performance measure values for the real-world data sets.
 3. Visualize the results in R by running the file `figures_real.R`.
 ## Simulation study
