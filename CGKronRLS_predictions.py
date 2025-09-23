@@ -202,13 +202,13 @@ if __name__ == "__main__":
 
     # Add here the path to the folder where the data sets are stored. 
     # For example, if the data sets are in the folder "Data sets" in the 
-    # same folder as this file, use "data_dir = './Data sets'".
-    data_dir = "./Data sets"
+    # same folder as this file, use the path below.
+    data_dir = path.join(".","Data sets")
 
     # Add here the path to the folder where the predictions will be saved. 
     # For example, if the predictions are to be saved in the folder "Predictions" in the 
-    # same folder as this file, use "save_dir = './Predictions'".
-    save_dir = "./Predictions"
+    # same folder as this file, use the path below.
+    save_dir = path.join(".","Predictions")
 
     """
     Determine the algorithms and their parameters here.
