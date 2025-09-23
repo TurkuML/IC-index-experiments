@@ -479,29 +479,3 @@ def cv_splits(drug_inds, target_inds, random_seed):
     cv_dfs = pd.concat(cv_dfs, axis = 0)
 
     return cv_dfs, splits
-
-"""
-This part is for checking that the functions work as expected and saving the splits as csv-files.
-One file per data set. 
-"""
-if __name__ == "__main__":
-    # Select a seed or multiple seeds for controlling the randomness in creating the splits.
-    random_seeds = [2688385916]
-    # Choose the percentage of drugs and targets that are defined to be in area IDIT and the percentage of area IDIT pairs that will be used as training data.
-    split_percentage = 1.0/3.0
-    datasets = ["davis", "metz", "kiba", "merget", "GPCR", "IC", "E"]
-    for random_seed in random_seeds:
-        for ds in datasets:
-            # Load the data set in the wanted form.
-            XD, XT, Y, drug_inds, target_inds = eval('load_'+ds+'()')
-
-            if ds == "kernelFilling":
-                # Create a single split of one common test set and training+validation sets for settings IDIT-ODOT.
-                df_indices, splits = splits(drug_inds, target_inds, split_percentage, random_seed)
-            else:
-                # Create splits for 9 fold cv.
-                # For each test fold, there are training+validation sets for settings IDIT-ODOT.
-                df_indices, splits = cv_splits(drug_inds, target_inds, random_seed)
-            
-            # Save the information of the splits as a csv-file.
-            df_indices.to_csv('splits_'+ds+'_RS_'+str(random_seed)+'_smallerIDIT.csv', index = False)
