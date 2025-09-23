@@ -11,6 +11,7 @@ import multiprocessing as mp
 from rlscore.measure import sqerror
 import numpy as np
 from sklearn.model_selection import ParameterGrid
+from os import path
 
 """
 Function to concatenate two feature matrices. 
@@ -116,6 +117,11 @@ if __name__ == "__main__":
     # same folder as this file, use "data_dir = './Data sets'".
     data_dir = "./Data sets"
 
+    # Add here the path to the folder where the predictions will be saved. 
+    # For example, if the predictions are to be saved in the folder "Predictions" in the 
+    # same folder as this file, use "save_dir = './Predictions'".
+    save_dir = "./Predictions"
+
     for ds in datasets:
         df_list = []
         print(ds)
@@ -168,4 +174,4 @@ if __name__ == "__main__":
             df_list.append(df)
             
         # Save the predictions for the data set as csv-file. 
-        pd.concat(df_list, ignore_index = True).to_csv('predictions_sklearnStyle_'+ds+'.csv', index = False)
+        pd.concat(df_list, ignore_index = True).to_csv(path.join(save_dir,'predictions_sklearnStyle_'+ds+'.csv'), index = False)
