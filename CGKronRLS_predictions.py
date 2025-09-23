@@ -11,6 +11,7 @@ from rlscore.kernel import GaussianKernel, LinearKernel
 from rlscore.learner import CGKronRLS
 from rlscore.measure import sqerror
 import data
+from os import path
 
 def pko_kronecker(K1, K2, rows1, cols1, rows2, cols2):
     pko = PairwiseKernelOperator([K1], [K2], [rows1], [cols1], [rows2], [cols2], weights=[1.0])
@@ -204,6 +205,11 @@ if __name__ == "__main__":
     # same folder as this file, use "data_dir = './Data sets'".
     data_dir = "./Data sets"
 
+    # Add here the path to the folder where the predictions will be saved. 
+    # For example, if the predictions are to be saved in the folder "Predictions" in the 
+    # same folder as this file, use "save_dir = './Predictions'".
+    save_dir = "./Predictions"
+
     """
     Determine the algorithms and their parameters here.
     Choose the values to be tested for the hyperparameter whose value will be optimized.
@@ -237,7 +243,7 @@ if __name__ == "__main__":
             splits_settingwise = [splits_foldwise[i] for i in new_order]
             
             parameters = it.product([Y], [drug_inds], [target_inds], splits_settingwise, \
-                list(it.product(models, hyperparams)), [XD], [XT]) # , [perf_measures] poistettu lopusta.
+                list(it.product(models, hyperparams)), [XD], [XT])
             
             # Compute different settings at the same time.
             pool = mp.Pool(processes = 4)
@@ -249,5 +255,5 @@ if __name__ == "__main__":
             df['random_seed'] = random_seed
             df_list.append(df)
             
-        # Save the predictions for the data set as csv-file. 
-        pd.concat(df_list, ignore_index = True).to_csv('predictions_KRLS_'+ds+'.csv', index = False)
+        # Save the predictions for the data set as csv-file in the folder given by save_dir.
+        pd.concat(df_list, ignore_index = True).to_csv(path.join(save_dir,'predictions_KRLS_'+ds+'.csv'), index = False)
