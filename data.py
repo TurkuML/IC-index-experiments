@@ -1,14 +1,16 @@
 import numpy as np
 import pandas as pd
+from os import path
+
 
 """
 Function to load an incomplete data set introduced by Metz et al. (2011).
 Returns the data matrices and lists of drug and target indices for the known pairs.
 """
-def load_metz():
-    Y = np.loadtxt("../Data sets/known_drug-target_interaction_affinities_pKi__Metz_et_al.2011.txt")
-    XD = np.loadtxt("../Data sets/drug-drug_similarities_2D__Metz_et_al.2011.txt")
-    XT = np.loadtxt("../Data sets/target-target_similarities_WS_normalized__Metz_et_al.2011.txt")
+def load_metz(data_path):
+    Y = np.loadtxt(path.join(data_path,"known_drug-target_interaction_affinities_pKi__Metz_et_al.2011.txt"))
+    XD = np.loadtxt(path.join(data_path,"drug-drug_similarities_2D__Metz_et_al.2011.txt"))
+    XT = np.loadtxt(path.join(data_path,"target-target_similarities_WS_normalized__Metz_et_al.2011.txt"))
     drug_inds, target_inds = np.where(np.isnan(Y)==False)
     Y = Y[drug_inds, target_inds]
     return XD, XT, Y, drug_inds.astype('int32'), target_inds.astype('int32')
@@ -21,15 +23,14 @@ range as in the corresponding matrix of Metz data.
 The returned continuous labels are natural logarithm of the Kd values so that the
 range is again similar to the range of continuous labels in Metz data.
 """
-def load_davis():
-    Y = np.loadtxt("../Data sets/drug-target_interaction_affinities_Kd__Davis_et_al.2011.txt")
-    XD = np.loadtxt("../Data sets/drug-drug_similarities_2D__Davis_et_al.2011.txt")
-    XT = np.loadtxt("../Data sets/target-target_similarities_WS_normalized__Davis_et_al.2011.txt")
+def load_davis(data_path):
+    Y = np.loadtxt(path.join(data_path, "drug-target_interaction_affinities_Kd__Davis_et_al.2011.txt"))
+    XD = np.loadtxt(path.join(data_path, "drug-drug_similarities_2D__Davis_et_al.2011.txt"))
+    XT = np.loadtxt(path.join(data_path, "target-target_similarities_WS_normalized__Davis_et_al.2011.txt"))
     XD = 100*XD
     drug_inds, target_inds = np.where(np.isnan(Y)==False)
     Y = Y[drug_inds, target_inds]
     Y = -1*np.log10(Y/1e9)
-
     return XD, XT, Y, drug_inds.astype('int32'), target_inds.astype('int32')
 
 """
@@ -39,10 +40,10 @@ Returns the data matrices and lists of drug and target indices for the known pai
 The matrices of drug similarities and target similaritied are multiplied by 100 in
 order to obtain the same range as in the corresponding matrices of Metz data.
 """
-def load_merget():
-    Y = np.loadtxt("../Data sets/Merget_DTIs_2967com_226kin.txt")
-    XD = np.loadtxt("../Data sets/Kd_Tanimoto-shortestpath.txt")
-    XT = np.loadtxt("../Data sets/Kp_GS-ATP_L5_Sp4.0_Sc4.0.txt")
+def load_merget(data_path):
+    Y = np.loadtxt(path.join(data_path, "Merget_DTIs_2967com_226kin.txt"))
+    XD = np.loadtxt(path.join(data_path, "Kd_Tanimoto-shortestpath.txt"))
+    XT = np.loadtxt(path.join(data_path, "Kp_GS-ATP_L5_Sp4.0_Sc4.0.txt"))
     XD = 100*XD
     XT = 100*XT
     drug_inds, target_inds = np.where(np.isnan(Y)==False)
@@ -58,40 +59,40 @@ Files kiba_binding_affinity_v2.txt and kiba_drug_sim.txt are slightly modifief i
 because their last columns were such that all values were "NA" and the numbers of
 rows and columns did not match.
 """
-def load_kiba():
-    Y = np.loadtxt("../Data sets/kiba_binding_affinity_v2.txt")
-    XD = np.loadtxt("../Data sets/kiba_drug_sim.txt")
-    XT = np.loadtxt("../Data sets/kiba_target_sim.txt")
+def load_kiba(data_path):
+    Y = np.loadtxt(path.join(data_path, "kiba_binding_affinity_v2.txt"))
+    XD = np.loadtxt(path.join(data_path, "kiba_drug_sim.txt"))
+    XT = np.loadtxt(path.join(data_path, "kiba_target_sim.txt"))
     XD = 100*XD
     XT = 100*XT
     drug_inds, target_inds = np.where(np.isnan(Y)==False)
     Y = Y[drug_inds, target_inds]
     return XD, XT, Y, drug_inds.astype('int32'), target_inds.astype('int32')
 
-def load_GPCR():
-    Y = np.loadtxt("../Data sets/gpcr_admat_dgc.txt")
-    XD = np.loadtxt("../Data sets/gpcr_simmat_dc.txt")
-    XT = np.loadtxt("../Data sets/gpcr_simmat_dg.txt")
+def load_GPCR(data_path):
+    Y = np.loadtxt(path.join(data_path, "gpcr_admat_dgc.txt"))
+    XD = np.loadtxt(path.join(data_path, "gpcr_simmat_dc.txt"))
+    XT = np.loadtxt(path.join(data_path, "gpcr_simmat_dg.txt"))
     XD = 100*XD
     XT = 100*XT
     drug_inds, target_inds = np.where(np.isnan(Y)==False)
     Y = Y[drug_inds, target_inds]
     return XD, XT, Y, drug_inds.astype('int32'), target_inds.astype('int32')
 
-def load_IC():
-    Y = np.loadtxt("../Data sets/ic_admat_dgc.txt")
-    XD = np.loadtxt("../Data sets/ic_simmat_dc.txt")
-    XT = np.loadtxt("../Data sets/ic_simmat_dg.txt")
+def load_IC(data_path):
+    Y = np.loadtxt(path.join(data_path, "ic_admat_dgc.txt"))
+    XD = np.loadtxt(path.join(data_path, "ic_simmat_dc.txt"))
+    XT = np.loadtxt(path.join(data_path, "ic_simmat_dg.txt"))
     XD = 100*XD
     XT = 100*XT
     drug_inds, target_inds = np.where(np.isnan(Y)==False)
     Y = Y[drug_inds, target_inds]
     return XD, XT, Y, drug_inds.astype('int32'), target_inds.astype('int32')
 
-def load_E():
-    Y = np.loadtxt("../Data sets/e_admat_dgc.txt")
-    XD = np.loadtxt("../Data sets/e_simmat_dc.txt")
-    XT = np.loadtxt("../Data sets/e_simmat_dg.txt")
+def load_E(data_path):
+    Y = np.loadtxt(path.join(data_path, "e_admat_dgc.txt"))
+    XD = np.loadtxt(path.join(data_path, "e_simmat_dc.txt"))
+    XT = np.loadtxt(path.join(data_path, "e_simmat_dg.txt"))
     XD = 100*XD
     XT = 100*XT
     drug_inds, target_inds = np.where(np.isnan(Y)==False)
