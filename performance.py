@@ -5,6 +5,7 @@ from IC_index import InteractionConcordanceIndex
 from rlscore.measure import cindex
 from cindex_measure import cindex_modified
 from statistics import mode
+from os import path
 
 """
 Function to calculate drug or targetwise performance measures. 
@@ -96,6 +97,11 @@ if __name__ == "__main__":
     # List the data sets for which the performances are calculated.
     data_sets = ["davis", "metz", "kiba", "merget", "GPCR", "IC", "E"]
 
+    # Add here the path to the folder where the predictions are stored. 
+    # For example, if the predictions are in the folder "Predictions" in the 
+    # same folder as this file, use the path below.
+    data_dir = path.join(".", "Predictions")
+
     df_ds = []
     for ds in data_sets:
 
@@ -105,7 +111,7 @@ if __name__ == "__main__":
         for m in ["KRLS", "kNN", "ltr", "RF", "XGBoost", "DDTA", "FF", "GT"]: 
             try:
                 # Modify the path if the predictions are not in the same folder as this file.
-                df_list.append(pd.read_csv('predictions_'+m+'_'+ds+'.csv'))
+                df_list.append(pd.read_csv(path.join(data_dir, 'predictions_'+m+'_'+ds+'.csv')))
             except:
                 continue 
 
