@@ -108,9 +108,12 @@ if __name__ == "__main__":
         print("Calculation of performance measures started for data", ds)
         df_list = []
         # List the algorithms for which the performances are calculated.
-        for m in ["KRLS", "kNN", "ltr", "RF", "XGBoost", "DDTA", "FF", "GT"]: 
+        for m in ["KRLS", "kNN", "ltr", "RF", "XGBoost", "DDTA", "FF", "GT"]:
+            # Some methods may not have predictions for all data sets. 
+            # Hence, use try-except to continue with other methods if reading 
+            # the predictions fails.
             try:
-                # Modify the path if the predictions are not in the same folder as this file.
+                # Read the predictions for the data set and the algorithm.
                 df_list.append(pd.read_csv(path.join(data_dir, 'predictions_'+m+'_'+ds+'.csv')))
             except:
                 continue 
