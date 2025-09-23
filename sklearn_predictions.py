@@ -111,10 +111,15 @@ if __name__ == "__main__":
     datasets = ["davis", "metz", "kiba", "merget", "GPCR", "IC", "E"]
     split_percentage = 1.0/3
 
+    # Add here the path to the folder where the data sets are stored. 
+    # For example, if the data sets are in the folder "Data sets" in the 
+    # same folder as this file, use "data_dir = './Data sets'".
+    data_dir = "./Data sets"
+
     for ds in datasets:
         df_list = []
         print(ds)
-        XD, XT, Y, drug_inds, target_inds = eval('data.load_'+ds+'()')    
+        XD, XT, Y, drug_inds, target_inds = eval('data.load_'+ds+'(data_dir)')    
         n_D = XD.shape[0]
         n_T = XT.shape[0]
 
