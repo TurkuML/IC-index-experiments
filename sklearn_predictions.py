@@ -1,3 +1,4 @@
+from os import path, makedirs
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.neighbors import KNeighborsRegressor
 from xgboost import XGBRegressor
@@ -11,7 +12,6 @@ import multiprocessing as mp
 from rlscore.measure import sqerror
 import numpy as np
 from sklearn.model_selection import ParameterGrid
-from os import path
 
 """
 Function to concatenate two feature matrices. 
@@ -90,7 +90,7 @@ def predictions(params):
             MSE_perf_best = perf_validation
             MSE_hp_best = hp_dict
             MSE_P_test = P_test
-
+        
     # Save the test data predictions with the best hyperparameters for the performance measures. 
     df_predictions_list = []
     df_predictions_list.append(pd.DataFrame({'ID_d':test_drug_inds, 'ID_t':test_target_inds, 'Y':Y_test, \
@@ -121,6 +121,9 @@ if __name__ == "__main__":
     # For example, if the predictions are to be saved in the folder "Predictions" in the 
     # same folder as this file, use the path below.
     save_dir = path.join(".","Predictions")
+    # Make sure that the folder given by save_dir exists and if not, create it.
+    if not path.exists(save_dir):
+        makedirs(save_dir)
 
     for ds in datasets:
         df_list = []
@@ -128,6 +131,7 @@ if __name__ == "__main__":
         XD, XT, Y, drug_inds, target_inds = eval('data.load_'+ds+'(data_dir)')    
         n_D = XD.shape[0]
         n_T = XT.shape[0]
+        
 
         for random_seed in random_seeds:
             df, splits = data.cv_splits(drug_inds, target_inds, random_seed)
@@ -141,37 +145,40 @@ if __name__ == "__main__":
             """
             Determine the algorithms and their parameters here.
             Choose the values to be tested for the hyperparameter whose value will be optimized.
-            Elements in the list of models are in form [learner object, dictionary of parameters whose values are given but not optimized, 
-                                                        list of dictionaries containing all possible values in the hyperparameter space.]
+            Elements in the list of models are in form 
+            [method name used in file name, 
+             learner object, 
+             dictionary of parameters whose values are given but not optimized,
+             list of dictionaries containing the possible values in the hyperparameter space.]
             """
-            models = [[XGBRegressor, \
+            models = [["XGBoost", XGBRegressor, \
                        {'objective':'reg:squarederror', 'random_state':random_seed}, \
                        ParameterGrid([{'n_estimators':[100, 125, 150]}])], \
-                      [KNeighborsRegressor,
+                      ["kNN", KNeighborsRegressor,
                        {}, 
                        ParameterGrid([{'n_neighbors':[5,10,30,50,75,100]}])], \
-                      [RandomForestRegressor,
+                      ["RF", RandomForestRegressor,
                        {'random_state':random_seed, 'warm_start':True}, 
                        ParameterGrid([{'n_estimators':[100,200,300]}])], \
-                      [ltr_cls,
+                      ["ltr", ltr_cls,
                        {'order':2, 'rank':30}, 
                        ParameterGrid([{'rank': [ 10,20,30,40,50,60,70,80]}])]]
-
-            """
-            The part that needs to be changed ends here.
-            """
-            parameters = it.product([Y], [drug_inds], [target_inds], splits_settingwise, \
-                                    models, [XD], [XT])
         
-            # Compute different cases (models & settings & folds) at the same time.
-            pool = mp.Pool(processes = 4)
-            output = pool.map(predictions, list(parameters))
-            pool.close()
-            pool.join()
-            df = pd.concat(output, ignore_index=False, axis = 0)
-            df['data_set'] = ds
-            df['random_seed'] = random_seed
-            df_list.append(df)
+            for m in models:
+                method_name = m[0]
+                
+                parameters = it.product([Y], [drug_inds], [target_inds], splits_settingwise, \
+                                        [m[1:]], [XD], [XT])
             
-        # Save the predictions for the data set as csv-file in the folder given by save_dir.
-        pd.concat(df_list, ignore_index = True).to_csv(path.join(save_dir,'predictions_sklearnStyle_'+ds+'.csv'), index = False)
+                # Compute different cases (settings & folds) in parallel.
+                pool = mp.Pool(processes = 4)
+                output = pool.map(predictions, list(parameters))
+                pool.close()
+                pool.join()
+                df = pd.concat(output, ignore_index=False, axis = 0)
+                df['data_set'] = ds
+                df['random_seed'] = random_seed
+                df_list.append(df)
+                
+                # Save the predictions for the data set as csv-file in the folder given by save_dir.
+                pd.concat(df_list, ignore_index = True).to_csv(path.join(save_dir,'predictions_'+method_name+'_'+ds+'.csv'), index = False)
