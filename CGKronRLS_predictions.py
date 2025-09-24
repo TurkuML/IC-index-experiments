@@ -1,3 +1,4 @@
+from os import path, makedirs
 import pandas as pd
 import itertools as it
 import multiprocessing as mp
@@ -11,7 +12,6 @@ from rlscore.kernel import GaussianKernel, LinearKernel
 from rlscore.learner import CGKronRLS
 from rlscore.measure import sqerror
 import data
-from os import path
 
 def pko_kronecker(K1, K2, rows1, cols1, rows2, cols2):
     pko = PairwiseKernelOperator([K1], [K2], [rows1], [cols1], [rows2], [cols2], weights=[1.0])
@@ -209,6 +209,10 @@ if __name__ == "__main__":
     # For example, if the predictions are to be saved in the folder "Predictions" in the 
     # same folder as this file, use the path below.
     save_dir = path.join(".","Predictions")
+
+    # Make sure that the folder given by save_dir exists and if not, create it.
+    if not path.exists(save_dir):
+        makedirs(save_dir)
 
     """
     Determine the algorithms and their parameters here.
