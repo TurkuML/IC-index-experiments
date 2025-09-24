@@ -181,4 +181,6 @@ if __name__ == "__main__":
                 df_list.append(df)
                 
                 # Save the predictions for the data set as csv-file in the folder given by save_dir.
+                # Note that the file name requires the information of the random seed as well if the 
+                # calculation are repeated with several random seeds.
                 pd.concat(df_list, ignore_index = True).to_csv(path.join(save_dir,'predictions_'+method_name+'_'+ds+'.csv'), index = False)
