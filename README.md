@@ -20,18 +20,26 @@ The experimental study was run by using Python 3.8.8 and visualized by using R v
 - patchwork (1.2.0)
 
 ## Experiment with the real-world data sets
-### To repeat the experiment from beginning
-1. Download the data sets. *TO DO: Add the links.*
-2. Run the prediction files to calculate the predictions for all the data sets and all settings with all the methods used in the experiment.
+### To repeat the experiment from the beginning
+1. Download the data sets. Collect all data files in one folder called "Data sets" in the same folder as where the codes are.
+    * Davis, Metz: https://staff.cs.utu.fi/~aatapa/data/DrugTarget/.
+    * Merget: *TO DO: Add the links.*
+    * KiBA: https://github.com/hkmztrk/DeepDTA/tree/master/data/kiba.
+    * Ion Channel, Enzymes, GPCR: http://web.kuicr.kyoto-u.ac.jp/supp/yoshi/drugtarget/.
+2. Run the prediction files to calculate the predictions for all the data sets and all settings with all the methods used in the experiment. The predictions will be saved in a folder named "Predictions" as separate files for the methods and data sets.
     * Run `python CGKronRLS_predictions.py` to obtain the predictions with the four versions of CGKronRLS: linear or Gaussian domain kernels together with linear or Kronecker kernel pairwise kernel.
     * Run `python sklearn_predictions.py` to obtain the predictions with the sklearn methods or method that used a wrapper of the same style: random forest, kNN, XGBoost and polynomial regression.
-    * Run the deep learning methods according to the instructions in the separate folders. 
+    * Run the deep learning methods according to the instructions in the separate folders. *TO DO: This part not updated to follow the same style as the others!*
 ### To verify the obtained results starting from already having the predictions
-1. Download the predictions from https://staff.cs.utu.fi/~aatapa/data/IC-index_predictions/IC-index%20-%20experiment%20predictions.zip and extract them in the same folder as where the codes are.
-2. Run `python performance.py` to obtain the performance measure values for the real-world data sets.
+1. Download the predictions from https://staff.cs.utu.fi/~aatapa/data/IC-index_predictions/IC-index%20-%20experiment%20predictions.zip and extract them in the same folder as where the codes are. 
+    * This will create a folder named as "Predictions", which contains the files for different methods and data sets.
+2. Run `python performance.py` to obtain the performance measure values for the real-world data sets. 
+    * The performance measure values are saved in a csv-file in the same folder as where the codes are.
 3. Visualize the results in R by running the file `figures_real.R`.
+    * This produces the figures in pdf-format.
 ## Simulation study
 1. Run `python simulation.py` to repeat the whole simulation study.
+    * Note that the predictions for the simulation are not saved. Instead, this returns the calculated performance measures in a csv-file in the same folder as where the codes are.
 2. Use the file `figures_simulation.R` to summarise and visualize the results.
 
 # Terminology mapping
