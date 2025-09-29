@@ -22,8 +22,8 @@ The experimental study was run by using Python 3.8.8 and visualized by using R v
 ## Experiment with the real-world data sets
 ### To repeat the experiment from the beginning
 1. Download the data sets. Collect all data files in one folder called "Data sets" in the same folder as where the codes are.
-    * Davis, Metz: https://staff.cs.utu.fi/~aatapa/data/DrugTarget/.
-    * Merget: *TO DO: Add the links.*
+    * Davis et al. and Metz et al.: https://staff.cs.utu.fi/~aatapa/data/DrugTarget/.
+    * Merget et al.: https://staff.cs.utu.fi/~aatapa/data/Merget_et_al_2017/.
     * KiBA: https://github.com/hkmztrk/DeepDTA/tree/master/data/kiba.
     * Ion Channel, Enzymes, GPCR: http://web.kuicr.kyoto-u.ac.jp/supp/yoshi/drugtarget/.
 2. Run the prediction files to calculate the predictions for all the data sets and all settings with all the methods used in the experiment. The predictions will be saved in a folder named "Predictions" as separate files for the methods and data sets.
