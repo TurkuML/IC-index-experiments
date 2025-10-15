@@ -14,8 +14,8 @@ prepare_df_for_figures_simulation <- function(df_performances){
                           value.name = "test_performance")
   
   df_performances$test_perf_measure <- factor(df_performances$test_perf_measure,
-                                              levels = c("IC_index", "C_index_d",
-                                                         "C_index_t", "C_index", "accuracy"))
+                                              levels = c("IC_index", "C_d_index",
+                                                         "C_t_index", "C_index", "accuracy"))
   
   
   # Split a string variable to separate variables for the settings and methods.
@@ -107,14 +107,14 @@ for(alg_name in unique(performances_XOR_imbalance_summary$algorithm)){
                               limits = c(0.0,0.6)) +
            
            # Determine the colors and how their labels are shown in the figure. 
-           scale_color_discrete(breaks = c("IC_index", "C_index_d", "C_index_t",
+           scale_color_discrete(breaks = c("IC_index", "C_d_index", "C_t_index",
                                            "C_index", "accuracy"),
                                 labels = c("IC-index", bquote(C[d]-index), 
                                            bquote(C[t]-index),
                                            "C-index", "Accuracy"),
                                 type = c("#F8766D", "#7CAE00", "#00BFC4", "#C77CFF",
                                          "#999999")) +
-           scale_fill_discrete(breaks = c("IC_index", "C_index_d", "C_index_t",
+           scale_fill_discrete(breaks = c("IC_index", "C_d_index", "C_t_index",
                                           "C_index", "accuracy"),
                                labels = c("IC-index", bquote(C[d]-index), 
                                           bquote(C[t]-index),
