@@ -107,29 +107,29 @@ def simulation(rn_generator, n_drugs = 100, n_targets = 100, k_f = 0.25, \
 
         # Rowwise sum of labels.
         P_test_R = group_sum(Y_training, row_training, row_test)
-        if any(P_test_R != 0):
-            df_list.append(pd.DataFrame({'random_seed':random_seed, 'ID_d':row_test,\
+        #if any(P_test_R != 0):
+        df_list.append(pd.DataFrame({'random_seed':random_seed, 'ID_d':row_test,\
                                             'ID_t':col_test, 'setting': setting, 'Y':Y_test, \
                                             'P':P_test_R, 'model':"DS"}))
         
         # Columnwise sum of labels.
         P_test_C = group_sum(Y_training, col_training, col_test)
-        if any(P_test_C != 0):
-            df_list.append(pd.DataFrame({'random_seed':random_seed, 'ID_d':row_test,\
+        #if any(P_test_C != 0):
+        df_list.append(pd.DataFrame({'random_seed':random_seed, 'ID_d':row_test,\
                                             'ID_t':col_test, 'setting': setting, 'Y':Y_test, \
                                             'P':P_test_C, 'model':"TS"}))
         
         # Sum of the rowwise and columnwise sums of labels.
         P_test_B = P_test_R + P_test_C
-        if any(P_test_B != 0):
-            df_list.append(pd.DataFrame({'random_seed':random_seed, 'ID_d':row_test,\
+        #if any(P_test_B != 0):
+        df_list.append(pd.DataFrame({'random_seed':random_seed, 'ID_d':row_test,\
                                             'ID_t':col_test, 'setting': setting, 'Y':Y_test, \
                                             'P':P_test_B, 'model':"SS"}))
 
         # Product of the rowwise and columnwise sums of labels.
         P_test_P = P_test_R*P_test_C
-        if any(P_test_P != 0):
-            df_list.append(pd.DataFrame({'random_seed':random_seed, 'ID_d':row_test,\
+        #if any(P_test_P != 0):
+        df_list.append(pd.DataFrame({'random_seed':random_seed, 'ID_d':row_test,\
                                             'ID_t':col_test, 'setting': setting, 'Y':Y_test, \
                                             'P':P_test_P, 'model':"PS"}))
 
