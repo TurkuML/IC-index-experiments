@@ -293,20 +293,6 @@ def train_test_splits(drug_inds, target_inds, split_percentage, random_seed):
             else:
                 ODOT_inds.append(i)
 
-    """
-    Uncomment the following part if the training set needs to be further split into 
-    a smaller training and a validation sets. Uncomment also the lines for having 
-    all of the indices in a data frame. 
-    """
-    # np.random.shuffle(IDIT_inds)
-    # np.random.shuffle(IDOT_inds)
-    # np.random.shuffle(ODIT_inds)
-    # np.random.shuffle(ODOT_inds)
-    # IDIT_training, IDIT_validation = split_both_in(IDIT_inds, drug_inds, target_inds)
-    # IDOT_training, IDOT_validation = split_one_in_one_off(IDOT_inds, target_inds)
-    # ODIT_training, ODIT_validation = split_one_in_one_off(ODIT_inds, drug_inds)
-    # ODOT_training, ODOT_validation = split_both_off(ODOT_inds, drug_inds, target_inds)
-
     IDIT_split = [IDIT_inds, test_inds]
     IDOT_split = [IDOT_inds, test_inds]
     ODIT_split = [ODIT_inds, test_inds]
@@ -315,13 +301,9 @@ def train_test_splits(drug_inds, target_inds, split_percentage, random_seed):
 
     df_indices = pd.concat([pd.DataFrame({'random_seed':random_seed, 'subset':'test', 'setting':'all', 'index':test_inds, 'ID_d':drug_inds[test_inds], 'ID_t':target_inds[test_inds]}),
         pd.DataFrame({'random_seed':random_seed, 'subset':'training', 'setting':'IDIT', 'index':IDIT_inds, 'ID_d':drug_inds[IDIT_inds], 'ID_t':target_inds[IDIT_inds]}),
-        # pd.DataFrame({'random_seed':random_seed, 'subset':'validation', 'setting':'IDIT', 'index':IDIT_validation, 'ID_d':drug_inds[IDIT_validation], 'ID_t':target_inds[IDIT_validation]}),
         pd.DataFrame({'random_seed':random_seed, 'subset':'training', 'setting':'IDOT', 'index':IDOT_inds, 'ID_d':drug_inds[IDOT_inds], 'ID_t':target_inds[IDOT_inds]}),
-        # pd.DataFrame({'random_seed':random_seed, 'subset':'validation', 'setting':'IDOT', 'index':IDOT_validation, 'ID_d':drug_inds[IDOT_validation], 'ID_t':target_inds[IDOT_validation]}),
         pd.DataFrame({'random_seed':random_seed, 'subset':'training', 'setting':'ODIT', 'index':ODIT_inds, 'ID_d':drug_inds[ODIT_inds], 'ID_t':target_inds[ODIT_inds]}),
-        # pd.DataFrame({'random_seed':random_seed, 'subset':'validation', 'setting':'ODIT', 'index':ODIT_validation, 'ID_d':drug_inds[ODIT_validation], 'ID_t':target_inds[ODIT_validation]}),
         pd.DataFrame({'random_seed':random_seed, 'subset':'training', 'setting':'ODOT', 'index':ODOT_inds, 'ID_d':drug_inds[ODOT_inds], 'ID_t':target_inds[ODOT_inds]}),
-        # pd.DataFrame({'random_seed':random_seed, 'subset':'validation', 'setting':'ODOT', 'index':ODOT_validation, 'ID_d':drug_inds[ODOT_validation], 'ID_t':target_inds[ODOT_validation]})
         ],
         axis = 0, sort = False)
     return df_indices, splits
