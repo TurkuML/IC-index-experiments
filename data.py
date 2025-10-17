@@ -2,10 +2,12 @@ import numpy as np
 import pandas as pd
 from os import path
 
-
 """
-Function to load an incomplete data set introduced by Metz et al. (2011).
-Returns the data matrices and lists of drug and target indices for the known pairs.
+Functions to read the data sets used in the experiments, which 
+return the data matrices and lists of drug and target indices for the known pairs.
+The similarity matrices are multiplied by 100, when necessary, to have similar ranges so that
+it was possible to search for optimal hyperparameters in a common range.
+Also, the continuous labels are scaled, when necessary, to have similar ranges as.
 """
 def load_metz(data_path):
     Y = np.loadtxt(path.join(data_path,"known_drug-target_interaction_affinities_pKi__Metz_et_al.2011.txt"))
@@ -15,14 +17,6 @@ def load_metz(data_path):
     Y = Y[drug_inds, target_inds]
     return XD, XT, Y, drug_inds.astype('int32'), target_inds.astype('int32')
 
-"""
-Function to load a complete data set introduced by Davis et al. (2011).
-Returns the data matrices and lists of drug and target indices for the known pairs.
-The matrix of drug similarities is multiplied by 100 in order to obtain the same
-range as in the corresponding matrix of Metz data.
-The returned continuous labels are natural logarithm of the Kd values so that the
-range is again similar to the range of continuous labels in Metz data.
-"""
 def load_davis(data_path):
     Y = np.loadtxt(path.join(data_path, "drug-target_interaction_affinities_Kd__Davis_et_al.2011.txt"))
     XD = np.loadtxt(path.join(data_path, "drug-drug_similarities_2D.txt"))
@@ -33,13 +27,6 @@ def load_davis(data_path):
     Y = -1*np.log10(Y/1e9)
     return XD, XT, Y, drug_inds.astype('int32'), target_inds.astype('int32')
 
-"""
-Function to load an incomplete data set introduced by Merget et al. (2017) and
-updated by Cichonska et al (2018).
-Returns the data matrices and lists of drug and target indices for the known pairs.
-The matrices of drug similarities and target similaritied are multiplied by 100 in
-order to obtain the same range as in the corresponding matrices of Metz data.
-"""
 def load_merget(data_path):
     Y = np.loadtxt(path.join(data_path, "Merget_DTIs_2967com_226kin.txt"))
     XD = np.loadtxt(path.join(data_path, "Kd_Tanimoto-shortestpath.txt"))
@@ -50,12 +37,6 @@ def load_merget(data_path):
     Y = Y[drug_inds, target_inds]
     return XD, XT, Y, drug_inds.astype('int32'), target_inds.astype('int32')
 
-"""
-Function to load an incomplete data set introduced by
-Returns the data matrices and lists of drug and target indices for the known pairs.
-The matrices of drug similarities and target similaritied are multiplied by 100 in
-order to obtain the same range as in the corresponding matrices of Metz data.
-"""
 def load_kiba(data_path):
     Y = np.loadtxt(path.join(data_path, "kiba_binding_affinity_v2.txt"))
     XD = np.loadtxt(path.join(data_path, "kiba_drug_sim.txt"))
