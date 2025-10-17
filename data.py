@@ -25,8 +25,8 @@ range is again similar to the range of continuous labels in Metz data.
 """
 def load_davis(data_path):
     Y = np.loadtxt(path.join(data_path, "drug-target_interaction_affinities_Kd__Davis_et_al.2011.txt"))
-    XD = np.loadtxt(path.join(data_path, "drug-drug_similarities_2D__Davis_et_al.2011.txt"))
-    XT = np.loadtxt(path.join(data_path, "target-target_similarities_WS_normalized__Davis_et_al.2011.txt"))
+    XD = np.loadtxt(path.join(data_path, "drug-drug_similarities_2D.txt"))
+    XT = np.loadtxt(path.join(data_path, "target-target_similarities_WS_normalized.txt"))
     XD = 100*XD
     drug_inds, target_inds = np.where(np.isnan(Y)==False)
     Y = Y[drug_inds, target_inds]
@@ -55,9 +55,6 @@ Function to load an incomplete data set introduced by
 Returns the data matrices and lists of drug and target indices for the known pairs.
 The matrices of drug similarities and target similaritied are multiplied by 100 in
 order to obtain the same range as in the corresponding matrices of Metz data.
-Files kiba_binding_affinity_v2.txt and kiba_drug_sim.txt are slightly modifief in R
-because their last columns were such that all values were "NA" and the numbers of
-rows and columns did not match.
 """
 def load_kiba(data_path):
     Y = np.loadtxt(path.join(data_path, "kiba_binding_affinity_v2.txt"))
