@@ -1,11 +1,36 @@
 import numpy as np
 import pandas as pd
 import time
-from IC_index import InteractionConcordanceIndex
-from rlscore.measure import cindex
-from cindex_measure import cindex_modified
 from statistics import mode
 from os import path
+import ic_index
+from scipy.stats import kendalltau
+
+def somersD(y, p):
+    return kendalltau(y, p, variant='c')[0] / kendalltau(y, y, variant='c')[0]
+
+def cindex(y, p):
+    if len(np.unique(p)) == 1:
+        return 0.5
+    else:
+        return (somersD(y, p) + 1) / 2
+
+def count_pairs(Y, P):
+    correct = Y.astype(np.float64)
+    predictions = P.astype(np.float64)
+    assert len(correct) == len(predictions)
+    C = np.array(correct).reshape(len(correct),)
+    C.sort()
+    pairs = 0
+    c_ties = 0
+    for i in range(1, len(C)):
+        if C[i] != C[i-1]:
+            c_ties = 0
+        else:
+            c_ties += 1
+        #this example forms a pair with each previous example, that has a lower value
+        pairs += i-c_ties
+    return pairs
 
 """
 Function to calculate drug or targetwise performance measures. 
@@ -18,16 +43,16 @@ Input: performance measure function, arrays of labels, predictions and IDs that 
 Output: prediction performance within the group measured by the given performance measure.
 """
 def group_performance_normalized(measure, y, y_predicted, group_ids):
-    performances = []
+    n_concordant = 0
+    n_pairs = 0
     for i in set(group_ids):
         y_subset = y[group_ids == i]
         y_predicted_subset = y_predicted[group_ids == i]
         if len(set(y_subset)) > 1:
-            performances.append(measure(y_subset, y_predicted_subset))
-    performances = np.array(performances)   
-    
-    performances_average = np.sum(performances[:, 0])/np.sum(performances[:, 1])
-    return(1- performances_average)
+            pairs = count_pairs(y_subset, y_predicted_subset)
+            n_concordant += measure(y_subset, y_predicted_subset)*pairs
+            n_pairs += pairs
+    return(n_concordant / n_pairs)
 
 """
 Function to calculate interaction concordance index, concordance index, 
@@ -52,8 +77,8 @@ def calculate_foldwise_IC_C_indices(df):
     for fold_id in folds:
         # Take a subset of data containing only rows related to the current fold.
         df_fold = df.loc[df['fold'] == fold_id,:]
-        drug_inds_fold = df_fold.ID_d.values.astype('int32')
-        target_inds_fold = df_fold.ID_t.values.astype('int32')
+        drug_inds_fold = df_fold.ID_d.values
+        target_inds_fold = df_fold.ID_t.values
         Y_fold = df_fold.Y.values
         P_fold = df_fold.iloc[:,4:]
 
@@ -63,18 +88,17 @@ def calculate_foldwise_IC_C_indices(df):
         C_t_indices_fold = []
 
         for m in range(P_fold.shape[1]):
-            print(P_fold.columns[m])
+            # print(P_fold.columns[m])
             # Calculate global C-index.
             C_indices_fold.append(cindex(Y_fold, P_fold.iloc[:,m].values))
             # Calculate averaged drugwise C-index.
-            C_d_indices_fold.append(group_performance_normalized(cindex_modified, Y_fold, \
+            C_d_indices_fold.append(group_performance_normalized(cindex, Y_fold, \
                                                                     P_fold.iloc[:,m].values, drug_inds_fold))
             # Calculate averaged targetwise C-index.
-            C_t_indices_fold.append(group_performance_normalized(cindex_modified, Y_fold, \
+            C_t_indices_fold.append(group_performance_normalized(cindex, Y_fold, \
                                                                     P_fold.iloc[:,m].values, target_inds_fold))
-
         # Calculate IC-indices for all hypotheses at once. 
-        IC_indices_fold = InteractionConcordanceIndex(drug_inds_fold, target_inds_fold, \
+        IC_indices_fold = ic_index.ic_index(drug_inds_fold, target_inds_fold, \
                                                 Y_fold.astype(float), P_fold.to_numpy())
         
         # Add the performance measure values related to this fold to the lists where all foldwise values are collected.
@@ -89,7 +113,6 @@ def calculate_foldwise_IC_C_indices(df):
     C_t_indices = pd.DataFrame(np.vstack(C_t_index_list)).mean()
     IC_indices = pd.DataFrame(np.vstack(IC_index_list)).mean()
 
-    
     return IC_indices, C_indices, C_d_indices, C_t_indices
 
 
@@ -100,7 +123,7 @@ if __name__ == "__main__":
     # Add here the path to the folder where the predictions are stored. 
     # For example, if the predictions are in the folder "Predictions" in the 
     # same folder as this file, use the path below.
-    data_dir = path.join(".", "Predictions")
+    data_dir = path.join("..", "Predictions")
 
     df_ds = []
     for ds in data_sets:
@@ -132,8 +155,6 @@ if __name__ == "__main__":
         # Spread the predictions of different models from one column to several columns. 
         df_all = df.pivot_table(index = ['ID_d','ID_t', 'fold', 'Y'], values = 'P', \
                                 columns = ['setting', 'model']).reset_index()
-        
-        print(df_all)
         
         time_start = time.time()
         
