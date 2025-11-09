@@ -34,6 +34,4 @@ Homepage = "https://github.com/TurkuML/IC-index-experiments/"
 
 [tool.setuptools.packages.find]
 where = ["."]  # Auto-discovers the `my_package/` directory
-
-[tool.setuptools]
-packages = ["performance"]
+exclude = ["deepdta*", "graphdta*", "drug-target-feedforward-main*"]
