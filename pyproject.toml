@@ -1,0 +1,32 @@
+[build-system]
+# Minimum requirements for the build system to execute.
+requires = [
+    "setuptools>=80",
+]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "ic_index_experiments"
+authors = [
+    {name = "Tapio Pahikkala"},
+    {name = "Riikka Numminen"},
+    {name = "Parisa Movahedi"},
+    {name = "Napsu Karmitsa"},
+    {name = "Antti Airola"}
+]
+readme = "README.md"
+license = "MIT"
+license-files = ["LICENSE"]
+requires-python = ">=3.11"
+dependencies = [
+    "numpy>=2.0.0",
+    "scipy>=1.16",
+    "pandas>=2.3",
+    "ic_index>=0.1.3"
+]
+classifiers = [
+  "Programming Language :: Python :: 3",
+]
+
+[project.urls]
+Homepage = "https://github.com/TurkuML/IC-index-experiments/"
