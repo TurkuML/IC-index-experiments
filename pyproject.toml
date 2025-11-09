@@ -33,4 +33,4 @@ classifiers = [
 Homepage = "https://github.com/TurkuML/IC-index-experiments/"
 
 [tool.setuptools]
-py_modules = ["performance"]
+packages = ["performance"]
