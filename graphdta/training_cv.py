@@ -9,7 +9,7 @@ from models.gat_gcn import GAT_GCN
 from models.gcn import GCNNet
 from models.ginconv import GINConvNet
 from utils import *
-from rlscore.measure.cindex_measure import cindex as rlscore_ci
+
 
 # training function at each epoch
 def train(model, device, train_loader, optimizer, epoch):
