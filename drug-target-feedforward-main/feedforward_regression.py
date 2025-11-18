@@ -1,7 +1,6 @@
 import tensorflow as tf
 from tensorflow import keras
 from keras import layers
-from rlscore.measure.cindex_measure import cindex
 import os
 from datetime import datetime
 import pandas as pd
