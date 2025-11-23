@@ -32,6 +32,5 @@ classifiers = [
 [project.urls]
 Homepage = "https://github.com/TurkuML/IC-index-experiments/"
 
-[tool.setuptools.packages.find]
-where = ["."]  # Auto-discovers the `my_package/` directory
-exclude = ["deepdta*", "graphdta*", "drug-target-feedforward-main*"]
+[tool.setuptools.packages]
+find = {where = ["src"]}
