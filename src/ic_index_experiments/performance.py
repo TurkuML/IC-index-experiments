@@ -123,7 +123,7 @@ def calculate_performances():
     # Add here the path to the folder where the predictions are stored. 
     # For example, if the predictions are in the folder "Predictions" in the 
     # same folder as this file, use the path below.
-    data_dir = path.join("..", "Predictions")
+    data_dir = "Predictions"
 
     df_ds = []
     for ds in data_sets:
