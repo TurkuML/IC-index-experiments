@@ -5,25 +5,28 @@
 This repository provides scripts to reproduce the drug-target affinity prediction performance results presented in **[Pahikkala et al. (2025)](#ref1)**.
 
 ## **Introduction**
-The **Interaction Concordance Index (IC-Index)** is a novel metric for evaluating interaction prediction methods. This repository allows users to recompute the prediction performance results reported in the paper.
+The **Interaction concordance index (IC-index)** is a novel metric for evaluating interaction prediction methods. This repository allows users to recompute the prediction performance results reported in the paper. Python package implementing the IC-index itself is available in a separate git repository [ic_index](https://github.com/TurkuML/Interaction-Concordance-Index).
 
 ## **Requirements**
-- Python ≥ 3.11
-- pip
+- python>=3.11
+- ic_index>=0.1.3
+- numpy>=2.0.0
+- pandas>=2.3
+- scipy>=1.16
 
 ## **Installation**
 
 1. **Set up a Python environment** (e.g., using Anaconda or `venv`):
    ```bash
-   conda create -n ic_index_env python=3.11
-   conda activate ic_index_env
+   conda create -n ic_index_experiments_env python=3.11
+   conda activate ic_index_experiments_env
    ```
 
 2. **Install the package** from GitHub:
    ```bash
    pip install git+https://github.com/TurkuML/IC-index-experiments
    ```
-   This will automatically install the following dependencies:
+   This will automatically install the required dependencies, i.e.:
    - `ic_index>=0.1.3`
    - `numpy>=2.0.0`
    - `pandas>=2.3`
