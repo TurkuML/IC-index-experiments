@@ -1,47 +1,62 @@
 
-# Scripts for repeating the results presented in [\[1\]](#ref1)
 
-Repeat the calculation of drug-target affinity prediction performances as presented in [\[1\]](#ref1) as follows:
+# IC-Index Experiments: Reproducing Drug-Target Affinity Prediction Results
 
-#### 1. Install the results repeating Python module for recomputation, 
+This repository provides scripts to reproduce the drug-target affinity prediction performance results presented in **[Pahikkala et al. (2025)](#ref1)**.
 
-Set up a clean Python environment, e.g. in Anacoda and install python>=3.11 and pip into it. Then install this git repository via the command:
+## **Introduction**
+The **Interaction Concordance Index (IC-Index)** is a novel metric for evaluating interaction prediction methods. This repository allows users to recompute the prediction performance results reported in the paper.
 
-```
-pip install git+https://github.com/TurkuML/IC-index-experiments
-```
+## **Requirements**
+- Python ≥ 3.11
+- pip
 
-This will automatically install the following dependencies:
+## **Installation**
 
-    * ic_index>=0.1.3
-    * numpy>=2.0.0
-    * pandas>=2.3
-    * scipy>=1.16
+1. **Set up a Python environment** (e.g., using Anaconda or `venv`):
+   ```bash
+   conda create -n ic_index_env python=3.11
+   conda activate ic_index_env
+   ```
 
-#### 2. Download data and precomputed affinity predictions
+2. **Install the package** from GitHub:
+   ```bash
+   pip install git+https://github.com/TurkuML/IC-index-experiments
+   ```
+   This will automatically install the following dependencies:
+   - `ic_index>=0.1.3`
+   - `numpy>=2.0.0`
+   - `pandas>=2.3`
+   - `scipy>=1.16`
 
-Data files available from the following links contain observed drug-target affinity strength values forming the ground truth. Place them in a folder "Data sets".
+## **Data Preparation**
 
-    * Davis et al. and Metz et al.: https://staff.cs.utu.fi/~aatapa/data/DrugTarget/
-    * Merget et al.: https://staff.cs.utu.fi/~aatapa/data/Merget_et_al_2017/
-    * KiBA: https://github.com/hkmztrk/DeepDTA/tree/master/data/kiba
-    * Ion Channel, Enzymes, GPCR: http://web.kuicr.kyoto-u.ac.jp/supp/yoshi/drugtarget/
+### **1. Download Ground Truth Data**
+Place the following datasets in a folder named `Data sets`:
+- [Davis et al. & Metz et al.](https://staff.cs.utu.fi/~aatapa/data/DrugTarget/)
+- [Merget et al.](https://staff.cs.utu.fi/~aatapa/data/Merget_et_al_2017/)
+- [KiBA](https://github.com/hkmztrk/DeepDTA/tree/master/data/kiba)
+- [Ion Channel, Enzymes, GPCR](http://web.kuicr.kyoto-u.ac.jp/supp/yoshi/drugtarget/)
 
-Download the following file containint the precomputed affinity predictions:
+### **2. Download Precomputed Predictions**
+Download and extract the predictions:
+- [IC-Index Experiment Predictions](https://staff.cs.utu.fi/~aatapa/data/IC-index_predictions/IC-index%20-%20experiment%20predictions.zip)
+  (This will create a `Predictions` folder.)
 
-    * https://staff.cs.utu.fi/~aatapa/data/IC-index_predictions/IC-index%20-%20experiment%20predictions.zip
-
-and extract its contents. This will create a folder named as "Predictions".
-
-#### 4. Run the module from Python interpreter
-
-```
+## **Running the Experiments**
+Execute the prediction performance calculation in Python:
+```python
 from ic_index_experiments import performance
 performance.calculate_performances()
 ```
 
+## **Troubleshooting**
+- **Missing dependencies?** Ensure Python ≥ 3.11 is installed.
+- **Data not found?** Verify the `Data sets` and `Predictions` folders are correctly placed.
 
-## References:
+## **License**
+This project is licensed under the [MIT License](LICENSE).
 
-\[1\] Pahikkala, T., Numminen, R., Movahedi, P., Karmitsa, N., & Airola, A. (2025). [Interaction Concordance Index: Performance Evaluation for Interaction Prediction Methods](https://arxiv.org/abs/2510.14419). arXiv preprint arXiv:2510.14419. <a name="ref1"></a>
-
+## **References**
+<a name="ref1"></a>
+[1] Pahikkala, T., Numminen, R., Movahedi, P., Karmitsa, N., & Airola, A. (2025). [Interaction Concordance Index: Performance Evaluation for Interaction Prediction Methods](https://arxiv.org/abs/2510.14419). *arXiv preprint arXiv:2510.14419*.
