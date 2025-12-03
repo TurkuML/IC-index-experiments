@@ -7,7 +7,9 @@ Repeat the calculation of drug-target affinity prediction performances as presen
 
 Set up a clean Python environment, e.g. in Anacoda and install python>=3.11 and pip into it. Then install this git repository via the command:
 
-`pip install git+https://github.com/TurkuML/IC-index-experiments`
+```
+pip install git+https://github.com/TurkuML/IC-index-experiments
+```
 
 This will automatically install the following dependencies:
 
