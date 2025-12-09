@@ -43,7 +43,7 @@ Place the following datasets in `Data sets/`:
 
 ### **2. Download Precomputed Predictions**
 Download and extract:
-- [IC-index%20-%20experiment%20predictions.zip](https://staff.cs.utu.fi/~aatapa/data/IC-index_predictions/IC-index%20-%20experiment%20predictions.zip))
+- [IC-index_experiment_predictions.zip](https://staff.cs.utu.fi/~aatapa/data/IC-index_experiments_predictions/IC-index_experiments_predictions.zip)
   (This will create the `Predictions/` folder.)
 
 ## **Running the Experiments**
