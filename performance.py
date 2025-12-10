@@ -119,48 +119,38 @@ def calculate_foldwise_IC_C_indices(df):
 if __name__ == "__main__":
     # List the data sets for which the performances are calculated.
     data_sets = ["davis", "metz", "kiba", "merget", "GPCR", "IC", "E"]
-
-    # Add here the path to the folder where the predictions are stored. 
-    # For example, if the predictions are in the folder "Predictions" in the 
-    # same folder as this file, use the path below.
     data_dir = path.join("..", "Predictions")
-
     df_ds = []
     for ds in data_sets:
 
         print("Calculation of performance measures started for data", ds)
-        df_list = []
+        df_predictions = pd.read_csv(path.join(data_dir, 'ground_truth_'+ds+'.csv'))
+        # print(df_predictions.head(), df_predictions.shape)
         # List the algorithms for which the performances are calculated.
-        for m in ["KRLS", "kNN", "ltr", "RF", "XGBoost", "DDTA", "FF", "GT"]:
+        for m in ["KRLSKRG", "KRLSKRL", "KRLSLRG", "KRLSLRL", "kNN", "ltr", \
+                  "RF", "XGBoost", "DDTA", "FF", "GT"]:
             # Some methods may not have predictions for all data sets. 
             # Hence, use try-except to continue with other methods if reading 
             # the predictions fails.
             try:
-                # Read the predictions for the data set and the algorithm.
-                df_list.append(pd.read_csv(path.join(data_dir, 'predictions_'+m+'_'+ds+'.csv')))
+                predictions = pd.read_csv(path.join(data_dir, 'predictions_'+m+'_'+ds+'.csv'))
+                predictions = predictions.pivot_table(index = ['ID_d','ID_t', 'fold'], values = 'P', \
+                                                      columns = ['setting']).reset_index()
+                predictions.rename(columns={'IDIT':m+':IDIT','IDOT':m+':IDOT', \
+                                            'ODIT':m+':ODIT', 'ODOT':m+':ODOT'}, inplace=True)
+                # Merge the predictions in one data frame based on all common columns.
+                df_predictions = df_predictions.merge(predictions, on=df_predictions.columns.intersection(predictions.columns).tolist())
+                
             except:
-                continue 
+                continue
 
-        df = pd.concat(df_list)
-        
-        # There are different precisions for Y in FF and GT results. 
-        # Hence, use the most common precision for all methods.
-        df_grouped = df.groupby(['ID_d', 'ID_t']).agg({'Y': lambda x: mode(x)}).reset_index()
-        # Join the groupwise modes to the original data frame based on the IDs. 
-        df = df.merge(df_grouped, on=['ID_d', 'ID_t'], suffixes=('', '_mode'))
-        # Replace the column Y with the values where the groupwise mode is used for all methods.
-        df['Y'] = df['Y_mode']
-        df.drop(columns=['Y_mode'], inplace=True)
-        
-        # Spread the predictions of different models from one column to several columns. 
-        df_all = df.pivot_table(index = ['ID_d','ID_t', 'fold', 'Y'], values = 'P', \
-                                columns = ['setting', 'model']).reset_index()
-        
+        print(df_predictions.head(), df_predictions.shape)
+
         time_start = time.time()
         
-        IC_indices, C_indices, C_d_indices, C_t_indices = calculate_foldwise_IC_C_indices(df_all)
+        IC_indices, C_indices, C_d_indices, C_t_indices = calculate_foldwise_IC_C_indices(df_predictions)
         
-        df_ds.append(pd.DataFrame({'data':ds, 'model':df_all.columns[4:].to_flat_index(), \
+        df_ds.append(pd.DataFrame({'data':ds, 'model':df_predictions.columns[4:].to_flat_index(), \
                                    'IC_index': IC_indices, 'C_index':C_indices, \
                                    'C_d_index':C_d_indices, 'C_t_index':C_t_indices})) 
   
