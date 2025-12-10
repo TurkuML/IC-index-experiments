@@ -116,10 +116,15 @@ def calculate_foldwise_IC_C_indices(df):
     return IC_indices, C_indices, C_d_indices, C_t_indices
 
 
-if __name__ == "__main__":
+def calculate_performances():
     # List the data sets for which the performances are calculated.
     data_sets = ["davis", "metz", "kiba", "merget", "GPCR", "IC", "E"]
-    data_dir = path.join("..", "Predictions")
+
+    # Add here the path to the folder where the predictions are stored. 
+    # For example, if the predictions are in the folder "Predictions" in the 
+    # same folder as this file, use the path below.
+    data_dir = "Predictions"
+
     df_ds = []
     for ds in data_sets:
 
@@ -158,3 +163,8 @@ if __name__ == "__main__":
     
     # Save all the results in a .csv file. 
     pd.concat(df_ds, ignore_index = True).to_csv('performances.csv', index = False)
+
+
+if __name__ == "__main__":
+    calculate_performances()
+
