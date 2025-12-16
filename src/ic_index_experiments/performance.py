@@ -1,20 +1,22 @@
 import numpy as np
 import pandas as pd
-import time
 from statistics import mode
-from os import path
+from pathlib import Path
 import ic_index
 from scipy.stats import kendalltau
 
+#Somer's D correlation coefficient as nonsymmetric Kendall's tau_c
 def somersD(y, p):
     return kendalltau(y, p, variant='c')[0] / kendalltau(y, y, variant='c')[0]
 
+#Concordance index as Somer's D correlation coefficient transformed between [0,1]
 def cindex(y, p):
     if len(np.unique(p)) == 1:
         return 0.5
     else:
         return (somersD(y, p) + 1) / 2
 
+#Helper function for drugwise or targetwise concordance index estimates.
 def count_pairs(Y, P):
     correct = Y.astype(np.float64)
     predictions = P.astype(np.float64)
@@ -28,15 +30,11 @@ def count_pairs(Y, P):
             c_ties = 0
         else:
             c_ties += 1
-        #this example forms a pair with each previous example, that has a lower value
-        pairs += i-c_ties
+        pairs += i - c_ties
     return pairs
 
 """
-Function to calculate drug or targetwise performance measures. 
-All elements in a group are taken as a subset for which the performance is calculated. 
-Returns average performance over the groups. Normalized version takes into account
-the numbers of elements in the groups. 
+Function for calculating drugwise or targetwise concordance index estimates. 
 
 Input: performance measure function, arrays of labels, predictions and IDs that determine the group.
 
@@ -54,26 +52,25 @@ def group_performance_normalized(measure, y, y_predicted, group_ids):
             n_pairs += pairs
     return(n_concordant / n_pairs)
 
+
 """
-Function to calculate interaction concordance index, concordance index, 
-and drug and targetwise concordance indices.
+Function for calculating interaction concordance index, concordance index, 
+as well as drugwise and targetwise concordance indices.
 
 Input: A data frame where the first 4 columns are ID_d, ID_t, fold and Y.
-Total number of columns depends of the number of different hypotheses whose predictions are
-gathered in the data frame as columns. These contain also the predictions for the different settings.
+The rest of columns are predictions made by different methods and settings.
 
 Output: The function returns the lists of IC-indices and all variations of C-indices.
 """
 def calculate_foldwise_IC_C_indices(df):
     folds = set(df['fold'])
 
-    # Initialize lists for collecting the foldwise performances.
+    # Initialize lists for collecting the foldwise performance estimates.
     C_index_list = []
     C_d_index_list = []
     C_t_index_list = []
     IC_index_list = []
 
-    # Go through the folds.
     for fold_id in folds:
         # Take a subset of data containing only rows related to the current fold.
         df_fold = df.loc[df['fold'] == fold_id,:]
@@ -82,13 +79,11 @@ def calculate_foldwise_IC_C_indices(df):
         Y_fold = df_fold.Y.values
         P_fold = df_fold.iloc[:,4:]
 
-        # Initialize lists for collecting the C-index based performance measures for the different hypotheses.
         C_indices_fold = []
         C_d_indices_fold = []
         C_t_indices_fold = []
 
         for m in range(P_fold.shape[1]):
-            # print(P_fold.columns[m])
             # Calculate global C-index.
             C_indices_fold.append(cindex(Y_fold, P_fold.iloc[:,m].values))
             # Calculate averaged drugwise C-index.
@@ -97,7 +92,7 @@ def calculate_foldwise_IC_C_indices(df):
             # Calculate averaged targetwise C-index.
             C_t_indices_fold.append(group_performance_normalized(cindex, Y_fold, \
                                                                     P_fold.iloc[:,m].values, target_inds_fold))
-        # Calculate IC-indices for all hypotheses at once. 
+        # Calculate IC-indices for all predictions in parallel. 
         IC_indices_fold = ic_index.ic_index(drug_inds_fold, target_inds_fold, \
                                                 Y_fold.astype(float), P_fold.to_numpy())
         
@@ -121,45 +116,43 @@ def calculate_performances():
     data_sets = ["davis", "metz", "kiba", "merget", "GPCR", "IC", "E"]
 
     # Add here the path to the folder where the predictions are stored. 
-    # For example, if the predictions are in the folder "Predictions" in the 
-    # same folder as this file, use the path below.
     data_dir = "Predictions"
 
     df_ds = []
     for ds in data_sets:
-
-        print("Calculation of performance measures started for data", ds)
-        df_predictions = pd.read_csv(path.join(data_dir, 'ground_truth_'+ds+'.csv'))
-        # print(df_predictions.head(), df_predictions.shape)
-        # List the algorithms for which the performances are calculated.
+        print("\n\nLoading " + ds + " data:")
+        df_gt = pd.read_csv(Path(data_dir, 'ground_truth_'+ds+'.csv'), header = None, names = ['Y'])
+        df_folds = pd.read_csv(Path(data_dir, 'folds_'+ds+'.csv'), header = None, names = ['fold'])
+        df_dtinds = pd.read_csv(Path(data_dir, 'drug_target_index_'+ds+'.csv'), header = None, names = ['ID_d','ID_t'])
+        print("Loaded groud truth, drug-target indices and fold partition.")
+        
+        list_of_predictions = []
+        loaded_method_setting_combinations =[]
+        
+        # Learning algorithms for which the performances are calculated.
         for m in ["KRLSKRG", "KRLSKRL", "KRLSLRG", "KRLSLRL", "kNN", "ltr", \
                   "RF", "XGBoost", "DDTA", "FF", "GT"]:
-            # Some methods may not have predictions for all data sets. 
-            # Hence, use try-except to continue with other methods if reading 
-            # the predictions fails.
-            try:
-                predictions = pd.read_csv(path.join(data_dir, 'predictions_'+m+'_'+ds+'.csv'))
-                predictions = predictions.pivot_table(index = ['ID_d','ID_t', 'fold'], values = 'P', \
-                                                      columns = ['setting']).reset_index()
-                predictions.rename(columns={'IDIT':m+':IDIT','IDOT':m+':IDOT', \
-                                            'ODIT':m+':ODIT', 'ODOT':m+':ODOT'}, inplace=True)
-                # Merge the predictions in one data frame based on all common columns.
-                df_predictions = df_predictions.merge(predictions, on=df_predictions.columns.intersection(predictions.columns).tolist())
-                
-            except:
-                continue
-
-        print(df_predictions.head(), df_predictions.shape)
-
-        time_start = time.time()
+            for setting in ['IDIT', 'IDOT', 'ODIT', 'ODOT']:
+                ppath = Path(data_dir, 'predictions_'+m+'_'+setting+'_'+ds+'.csv')
+                # Some methods may not have predictions for all data sets.
+                if ppath.exists():
+                    df_predictions = pd.read_csv(ppath, header = None, names = [m + ':' + setting])
+                    list_of_predictions.append(df_predictions)
+                    loaded_method_setting_combinations.append(m + '_' + setting)
+                else:
+                    continue
+        print("Loaded predictions by method under setting (method_setting): " + ", ".join(loaded_method_setting_combinations))
+        print("Calculating prediction performance estimates...")
         
-        IC_indices, C_indices, C_d_indices, C_t_indices = calculate_foldwise_IC_C_indices(df_predictions)
+        df_concatenated = pd.concat([df_dtinds, df_folds, df_gt]+list_of_predictions, axis=1)
         
-        df_ds.append(pd.DataFrame({'data':ds, 'model':df_predictions.columns[4:].to_flat_index(), \
+        IC_indices, C_indices, C_d_indices, C_t_indices = calculate_foldwise_IC_C_indices(df_concatenated)
+        
+        df_ds.append(pd.DataFrame({'data':ds, 'model':df_concatenated.columns[4:].to_flat_index(), \
                                    'IC_index': IC_indices, 'C_index':C_indices, \
                                    'C_d_index':C_d_indices, 'C_t_index':C_t_indices})) 
   
-        print("Calculations finished in time", time.time()-time_start)
+        print("Finished with " + ds + " data.")
     
     # Save all the results in a .csv file. 
     pd.concat(df_ds, ignore_index = True).to_csv('performances.csv', index = False)
