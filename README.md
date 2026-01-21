@@ -1,8 +1,7 @@
 
 
 # IC-Index Experiments
-
-The **Interaction Concordance Index (IC-Index)** is a novel metric for evaluating interaction prediction methods. This repository allows users to recompute the drug-target affinity prediction performance results reported in  **[Pahikkala et al. (2025)](#ref1)**. The Python package implementing the IC-Index itself is available in a separate repository: [ic_index](https://github.com/TurkuML/Interaction-Concordance-Index).
+This repository allows users to recompute the drug-target affinity prediction performance results reported in  **[Pahikkala et al. (2025)](#ref1)**. The Python package implementing the IC-Index itself is available in a separate repository: [ic_index](https://github.com/TurkuML/Interaction-Concordance-Index).
 
 ## **Requirements**
 The following dependencies are **automatically installed** with the package:
@@ -29,25 +28,17 @@ The following dependencies are **automatically installed** with the package:
 Ensure your working directory contains:
 ```
 .
-├── Data sets/          # Ground truth data (downloaded below)
 ├── Predictions/        # Precomputed predictions (extracted below)
 └── (other files)
 ```
 
-### **1. Download Ground Truth Data**
-Place the following datasets in `Data sets/`:
-- [Davis et al. & Metz et al.](https://staff.cs.utu.fi/~aatapa/data/DrugTarget/)
-- [Merget et al.](https://staff.cs.utu.fi/~aatapa/data/Merget_et_al_2017/)
-- [KiBA](https://github.com/hkmztrk/DeepDTA/tree/master/data/kiba)
-- [Ion Channel, Enzymes, GPCR](http://web.kuicr.kyoto-u.ac.jp/supp/yoshi/drugtarget/)
-
-### **2. Download Precomputed Predictions**
+### **Download ground truth affinity values, precomputed predictions and other metadata**
 Download and extract:
 - [IC-index_experiment_predictions.zip](https://staff.cs.utu.fi/~aatapa/data/IC-index_experiments_predictions/IC-index_experiments_predictions.zip)
   (This will create the `Predictions/` folder.)
 
-## **Running the Experiments**
-Execute the performance calculation in Python:
+## **Repetition of the results**
+Execute the prediction performance estimation script in Python interpreter:
 ```python
 from ic_index_experiments import performance
 performance.calculate_performances()  # Results will be saved to performances.csv
