@@ -33,8 +33,8 @@ Ensure your working directory contains:
 ```
 
 ### **Download ground truth affinity values, precomputed predictions and other metadata**
-Download and extract:
-- [IC-index_experiment_predictions.zip](https://staff.cs.utu.fi/~aatapa/data/IC-index_experiments_predictions/IC-index_experiments_predictions.zip)
+Download and extract the data from:
+- [https://doi.org/10.5281/zenodo.18140023](https://doi.org/10.5281/zenodo.18140023)
   (This will create the `Predictions/` folder.)
 
 ## **Repetition of the results**
