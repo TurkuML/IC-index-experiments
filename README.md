@@ -1,7 +1,7 @@
 
 
 # IC-Index Experiments
-This repository allows users to recompute the drug-target affinity prediction performance results reported in  **[Pahikkala et al. (2025)](#ref1)**. The Python package implementing the IC-Index itself is available in a separate repository: [ic_index](https://github.com/TurkuML/Interaction-Concordance-Index).
+This repository allows users to recompute the drug-target affinity prediction performance results reported in  **[Pahikkala et al. (2025)](#ref1)**. The Python package implementing the IC-Index itself is available as an installable Python package in Python Package Index at [https://pypi.org/project/ic-index/](https://pypi.org/project/ic-index/) and its development version in a separate github repository: [ic_index](https://github.com/TurkuML/Interaction-Concordance-Index).
 
 ## **Requirements**
 The following dependencies are **automatically installed** with the package:
